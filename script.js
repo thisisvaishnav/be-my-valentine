@@ -927,17 +927,12 @@ const showCelebration = () => {
     </div>
   `;
 
-  // Add bouncing baddie image
-  const bounceImage = document.createElement('img');
-  bounceImage.src = './images/baddie.jpg';
-  bounceImage.alt = 'My Valentine';
-  bounceImage.style.position = 'absolute';
-  bounceImage.style.width = '250px';
-  bounceImage.style.height = '275px';
-  bounceImage.style.borderRadius = '50%';
-  bounceImage.style.zIndex = '20';
-  document.body.appendChild(bounceImage);
-  startBouncing(bounceImage);
+  // Add floating baddie image (floats in and settles, never covers the card)
+  const floatImage = document.createElement('img');
+  floatImage.src = './images/baddie.jpg';
+  floatImage.alt = 'My Valentine';
+  floatImage.className = 'baddie-float-in';
+  document.body.appendChild(floatImage);
 
   // Fire heart confetti
   fireHeartConfetti();
@@ -1555,48 +1550,3 @@ const addSaveMemoryButton = () => {
   celebrationContainer.appendChild(saveWrapper);
 };
 
-// ===== BOUNCING IMAGE =====
-const startBouncing = (element) => {
-  let x = Math.random() * (window.innerWidth - 250);
-  let y = Math.random() * (window.innerHeight - 275);
-  let dx = 2;
-  let dy = 2;
-  let rotation = 0;
-
-  const move = () => {
-    const viewportWidth = window.innerWidth - element.offsetWidth;
-    const viewportHeight = window.innerHeight - element.offsetHeight;
-
-    if (x <= 0 || x >= viewportWidth) {
-      dx *= -1;
-      rotation += 15;
-      anime({
-        targets: element,
-        translateX: dx > 0 ? x + 20 : x - 20,
-        duration: 300,
-        easing: 'easeOutElastic(1, .6)',
-      });
-    }
-
-    if (y <= 0 || y >= viewportHeight) {
-      dy *= -1;
-      rotation += 15;
-      anime({
-        targets: element,
-        translateY: dy > 0 ? y + 20 : y - 20,
-        duration: 300,
-        easing: 'easeOutElastic(1, .6)',
-      });
-    }
-
-    x += dx;
-    y += dy;
-    element.style.left = `${x}px`;
-    element.style.top = `${y}px`;
-    element.style.transform = `rotate(${rotation}deg)`;
-
-    requestAnimationFrame(move);
-  };
-
-  move();
-};

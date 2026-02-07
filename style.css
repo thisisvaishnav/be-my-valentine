@@ -652,14 +652,48 @@ body {
   box-shadow: 0 4px 20px rgba(255, 107, 138, 0.3);
 }
 
-/* ===== BADDIE BOUNCE IMAGE ===== */
-img[src="./images/baddie.jpg"] {
-  position: absolute;
-  border: 4px solid #ff6b8a;
+/* ===== BADDIE FLOAT-IN IMAGE ===== */
+.baddie-float-in {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 180px;
+  height: 200px;
   border-radius: 50%;
-  will-change: transform;
+  border: 4px solid #ff6b8a;
   box-shadow: 0 4px 25px rgba(255, 107, 138, 0.4);
-  transition: border-color 0.3s;
+  z-index: 5;
+  pointer-events: none;
+  object-fit: cover;
+  /* Float in from off-screen bottom-right */
+  animation: baddieFloatIn 1.8s cubic-bezier(0.22, 1, 0.36, 1) forwards,
+             baddieBob 3s ease-in-out 2s infinite;
+  opacity: 0;
+  transform: translateY(120px) scale(0.7);
+}
+
+@keyframes baddieFloatIn {
+  0% {
+    opacity: 0;
+    transform: translateY(120px) scale(0.7);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-10px) scale(1.03);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes baddieBob {
+  0%, 100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-12px) scale(1);
+  }
 }
 
 /* ===== RUNAWAY BUTTON ===== */
@@ -708,6 +742,13 @@ img[src="./images/baddie.jpg"] {
   #responseButtons {
     flex-direction: column;
     gap: 12px;
+  }
+
+  .baddie-float-in {
+    width: 120px;
+    height: 135px;
+    bottom: 12px;
+    right: 12px;
   }
 }
 
