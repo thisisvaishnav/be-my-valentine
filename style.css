@@ -20,12 +20,12 @@ body {
   position: fixed;
   top: 0;
   left: 0;
-  width: 40px;
-  height: 40px;
+  width: 64px;
+  height: 64px;
   pointer-events: none;
   z-index: 99999;
   transform: translate(-50%, -50%);
-  font-size: 32px;
+  font-size: 64px;
   line-height: 1;
   text-align: center;
   filter: drop-shadow(0 0 6px rgba(255, 107, 138, 0.7)) drop-shadow(0 0 14px rgba(255, 80, 120, 0.4));
@@ -1725,6 +1725,68 @@ body {
   50% { opacity: 1; transform: scale(1.05); }
 }
 
+/* ===== US FOREVER PHOTO REVEAL ===== */
+.us-forever-reveal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.6);
+  z-index: 2000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  opacity: 0;
+  animation: usForeverPopIn 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) 0.1s forwards;
+}
+
+@keyframes usForeverPopIn {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.6);
+  }
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
+}
+
+.us-forever-photo {
+  width: 340px;
+  max-width: 85vw;
+  border-radius: 20px;
+  border: 4px solid rgba(255, 107, 138, 0.6);
+  box-shadow:
+    0 8px 40px rgba(255, 107, 138, 0.35),
+    0 0 80px rgba(255, 210, 220, 0.2);
+  object-fit: cover;
+}
+
+.us-forever-label {
+  text-align: center;
+  font-family: 'Sacramento', cursive;
+  font-size: 2.8rem;
+  font-weight: 400;
+  color: #fff;
+  text-shadow:
+    0 2px 16px rgba(189, 30, 89, 0.5),
+    0 0 40px rgba(255, 107, 138, 0.3);
+  letter-spacing: 1px;
+  opacity: 0;
+  animation: usForeverTextIn 0.8s ease 0.5s forwards;
+}
+
+@keyframes usForeverTextIn {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @media (max-width: 480px) {
   .rose-video-reveal video {
     width: 300px;
@@ -1736,6 +1798,14 @@ body {
 
   .rose-teaser-message {
     font-size: 1.2rem;
+  }
+
+  .us-forever-photo {
+    width: 280px;
+  }
+
+  .us-forever-label {
+    font-size: 2rem;
   }
 }
 

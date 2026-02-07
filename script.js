@@ -1067,8 +1067,90 @@ const playEggRevealChime = () => {
   });
 };
 
+// Show the "Us Forever" photo reveal
+const showUsForeverPhoto = () => {
+  // Overlay
+  const overlay = document.createElement('div');
+  overlay.className = 'egg-reveal-overlay';
+  document.body.appendChild(overlay);
+
+  // Photo container
+  const photoContainer = document.createElement('div');
+  photoContainer.className = 'us-forever-reveal';
+
+  const photo = document.createElement('img');
+  photo.src = './images/both.jpeg';
+  photo.alt = 'Us together';
+  photo.className = 'us-forever-photo';
+  photoContainer.appendChild(photo);
+
+  const foreverLabel = document.createElement('div');
+  foreverLabel.className = 'us-forever-label';
+  foreverLabel.textContent = 'Us Forever 💕';
+  photoContainer.appendChild(foreverLabel);
+
+  // Close button
+  const closeBtn = document.createElement('button');
+  closeBtn.className = 'rose-video-close';
+  closeBtn.innerHTML = '&times;';
+  closeBtn.setAttribute('aria-label', 'Close photo');
+  closeBtn.setAttribute('tabindex', '0');
+  photoContainer.appendChild(closeBtn);
+
+  document.body.appendChild(photoContainer);
+
+  // Animate in
+  requestAnimationFrame(() => {
+    overlay.classList.add('visible');
+  });
+
+  // Mini heart confetti burst for the moment
+  fireHeartConfetti();
+
+  // Dismiss handler
+  const handlePhotoDismiss = () => {
+    photoContainer.style.transition = 'transform 0.4s ease, opacity 0.4s ease';
+    photoContainer.style.transform = 'translate(-50%, -50%) scale(0.5)';
+    photoContainer.style.opacity = '0';
+    overlay.classList.remove('visible');
+
+    setTimeout(() => {
+      overlay.remove();
+      photoContainer.remove();
+    }, 400);
+  };
+
+  overlay.addEventListener('click', handlePhotoDismiss);
+  closeBtn.addEventListener('click', handlePhotoDismiss);
+  closeBtn.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') handlePhotoDismiss();
+  });
+};
+
 // Show the rose video in a beautiful overlay
 const showRoseVideo = () => {
+  let loopCount = 0;
+  let transitioned = false;
+
+  // Transition from video to "Us Forever" photo
+  const transitionToPhoto = () => {
+    if (transitioned) return;
+    transitioned = true;
+
+    videoContainer.style.transition = 'transform 0.4s ease, opacity 0.4s ease';
+    videoContainer.style.transform = 'translate(-50%, -50%) scale(0.5)';
+    videoContainer.style.opacity = '0';
+    overlay.classList.remove('visible');
+
+    setTimeout(() => {
+      video.pause();
+      overlay.remove();
+      videoContainer.remove();
+      // Show the couple photo after a brief pause
+      setTimeout(() => showUsForeverPhoto(), 300);
+    }, 400);
+  };
+
   // Create overlay
   const overlay = document.createElement('div');
   overlay.className = 'egg-reveal-overlay';
@@ -1086,6 +1168,30 @@ const showRoseVideo = () => {
   video.playsInline = true;
   video.setAttribute('aria-label', 'A rose for you');
   videoContainer.appendChild(video);
+
+  // Track loops — after 2 full plays, auto-show the photo
+  video.addEventListener('ended', () => {
+    loopCount++;
+    if (loopCount >= 2) {
+      transitionToPhoto();
+    }
+  });
+
+  // Since loop=true, 'ended' won't fire. Use 'timeupdate' + 'seeked' instead.
+  // Actually, with loop=true the 'ended' event does NOT fire. 
+  // We track via 'timeupdate' watching for resets to start.
+  let lastTime = 0;
+  video.addEventListener('timeupdate', () => {
+    if (transitioned) return;
+    // Detect loop restart: currentTime jumps back to near 0
+    if (video.currentTime < lastTime - 0.5) {
+      loopCount++;
+      if (loopCount >= 2) {
+        transitionToPhoto();
+      }
+    }
+    lastTime = video.currentTime;
+  });
 
   const label = document.createElement('div');
   label.className = 'rose-video-label';
@@ -1107,25 +1213,12 @@ const showRoseVideo = () => {
     overlay.classList.add('visible');
   });
 
-  // Dismiss handler
-  const handleDismiss = () => {
-    videoContainer.style.transition = 'transform 0.4s ease, opacity 0.4s ease';
-    videoContainer.style.transform = 'translate(-50%, -50%) scale(0.5)';
-    videoContainer.style.opacity = '0';
-    overlay.classList.remove('visible');
-
-    setTimeout(() => {
-      video.pause();
-      overlay.remove();
-      videoContainer.remove();
-    }, 400);
-  };
-
-  overlay.addEventListener('click', handleDismiss);
-  closeBtn.addEventListener('click', handleDismiss);
+  // Close / overlay click → transition to photo
+  closeBtn.addEventListener('click', transitionToPhoto);
   closeBtn.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter' || e.key === ' ') handleDismiss();
+    if (e.key === 'Enter' || e.key === ' ') transitionToPhoto();
   });
+  overlay.addEventListener('click', transitionToPhoto);
 };
 
 // Reveal the rose video after egg cracks (5-second wait)
@@ -1192,7 +1285,7 @@ const handleEggClick = (eggButton) => {
     setTimeout(() => eggButton.classList.remove('egg-shaking'), 400);
   } else if (eggClickCount === 4) {
     // More cracks — stronger glow and wobble
-    eggButton.textContent = '🐣';
+    eggButton.textContent = '😄';
     eggButton.classList.remove('egg-crack-1');
     eggButton.classList.add('egg-crack-2');
   }
