@@ -3,35 +3,64 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Valentine's Day</title>
+  <title>For You, Anshu 💌</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&family=Poppins:wght@400;500;600;700&family=Sacramento&display=swap" rel="stylesheet">
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
-  <style>
-    .gradient-background {
-      background: linear-gradient(180deg, rgba(255, 208, 229, 1) 0%, rgba(255, 232, 242, 1) 36%, rgba(255, 255, 255, 1) 100%);
-    }
-    .bounce2 {
-      animation: bounce2 2s ease infinite;
-    }
-    @keyframes bounce2 {
-      0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-      40% { transform: translateY(-20px); }
-      60% { transform: translateY(-10px); }
-    }
-  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <link rel="stylesheet" href="./style.css">
 </head>
-<body class="gradient-background">
-  <div class="flex items-center justify-center h-screen">
-    <div class="flex flex-col items-center p-4 text-center">
-      <img id="imageDisplay" src="./images/image1.gif" alt="Cute dancing duck with hearts" class="rounded-md h-[300px]" style="object-fit: cover;" />
-      <h2 id="valentineQuestion" class="text-4xl font-bold italic text-[#bd1e59] my-4 text-center">Will you be my Valentine?</h2>
-      <div class="flex gap-4 pt-[20px] items-center" id="responseButtons">
+<body>
+  <!-- Floating Hearts Background -->
+  <div id="floatingHearts" class="floating-hearts-container" aria-hidden="true"></div>
+
+  <!-- Sparkle particles -->
+  <div id="sparkles" class="sparkles-container" aria-hidden="true"></div>
+
+  <!-- Romantic vignette (dark edges, bright center) -->
+  <div class="romantic-vignette" aria-hidden="true"></div>
+
+  <!-- Soft blur zone behind the card (focus pull) -->
+  <div class="card-backdrop-blur" aria-hidden="true"></div>
+
+  <!-- Main Content -->
+  <div class="flex items-center justify-center min-h-screen relative z-10 px-4">
+    <div id="mainCard" class="glass-card fade-in-up flex flex-col items-center p-8 md:p-12 text-center max-w-lg w-full">
+      
+      <!-- Decorative top hearts -->
+      <div class="decorative-hearts" aria-hidden="true">
+        <span class="heart-icon left-heart">&#10084;</span>
+        <span class="heart-icon right-heart">&#10084;</span>
+      </div>
+
+      <!-- Image with cute frame -->
+      <div class="image-frame">
+        <img id="imageDisplay" src="./images/image1.gif" alt="Cute dancing duck with hearts" class="main-image" />
+      </div>
+
+      <!-- Romantic question with typewriter effect -->
+      <h2 id="valentineQuestion" class="valentine-heading">
+        <span class="greeting-line">Hey Anshu</span>
+        <span class="question-line" id="typewriterText"></span>
+      </h2>
+
+      <!-- Cute subtext -->
+      <p class="subtext fade-in-delayed">I made this just for you... 🥺</p>
+
+      <!-- Buttons -->
+      <div class="flex gap-6 pt-6 items-center relative" id="responseButtons">
         <button id="yesButton"
-          class="bounce2 inline-flex items-center justify-center whitespace-nowrap rounded-md text-[20px] font-medium hover:bg-green-400 min-h-12 min-w-[75px] px-4 py-2 bg-green-500 text-white transition">
-          Yes
+          class="yes-button bounce2"
+          aria-label="Say yes to being my Valentine"
+          tabindex="0">
+          <span class="button-heart">&#10084;</span> Yes <span class="button-heart">&#10084;</span>
         </button>
         <button id="noButton"
-          class="inline-flex items-center justify-center whitespace-nowrap rounded-md text-[20px] font-medium hover:bg-red-700 h-12 min-w-[75px] w-auto px-4 py-2 bg-red-500 text-white">
+          class="no-button"
+          aria-label="Say no"
+          tabindex="0">
           No
         </button>
       </div>
